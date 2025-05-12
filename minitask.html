@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Task Platform</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f4f4;
+      padding: 15px;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    
+    .auth-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .user-info {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .points {
+      background: #3498db;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    
+    .task {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .reward {
+      background: #27ae60;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    
+    .submit-form input, 
+    .submit-form textarea,
+    .auth-form input {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .submit-form button,
+    .auth-form button,
+    .logout-btn {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    
+    .submit-form button:hover,
+    .auth-form button:hover,
+    .logout-btn:hover {
+      background: #2980b9;
+    }
+    
+    .admin-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .submission {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+    
+    .submission img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      margin: 10px 0;
+    }
+    
+    .admin-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .approve-btn {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .reject-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      background: #ddd;
+      cursor: pointer;
+      border-radius: 4px 4px 0 0;
+    }
+    
+    .tab.active {
+      background: #3498db;
+      color: white;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    @media (max-width: 600px) {
+      .task-header {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Mini Task Platform</h1>
+  </div>
+
+  <div id="authContainer" class="auth-container">
+    <div id="loginForm" class="auth-form">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button id="loginBtn">Login</button>
+      <p>Don't have an account? <span id="showSignup" style="color: #3498db; cursor: pointer;">Sign up</span></p>
+    </div>
+    
+    <div id="signupForm" class="auth-form hidden">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupUsername" placeholder="Username" required />
+      <input type="email" id="signupEmail" placeholder="Email" required />
+      <input type="password" id="signupPassword" placeholder="Password" required />
+      <button id="signupBtn">Sign Up</button>
+      <p>Already have an account? <span id="showLogin" style="color: #3498db; cursor: pointer;">Login</span></p>
+    </div>
+  </div>
+  
+  <div id="userInfo" class="user-info hidden">
+    <div>
+      <h2>Welcome, <span id="usernameDisplay"></span></h2>
+    </div>
+    <div class="points">
+      <span id="pointsDisplay">0</span> Points
+    </div>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </div>
+  
+  <div id="adminPanel" class="hidden">
+    <div class="tabs">
+      <div class="tab active" data-tab="tasksTab">Tasks</div>
+      <div class="tab" data-tab="adminTab">Admin</div>
+    </div>
+  </div>
+  
+  <div id="tasksTab">
+    <h2>Available Tasks</h2>
+    <div id="taskList"></div>
+  </div>
+  
+  <div id="adminTab" class="hidden">
+    <div class="admin-section">
+      <h2>Add New Task</h2>
+      <div class="auth-form">
+        <input type="text" id="taskTitle" placeholder="Task Title" required />
+        <input type="number" id="taskReward" placeholder="Reward Points" required />
+        <input type="text" id="taskLink" placeholder="Task Link" required />
+        <textarea id="taskDescription" placeholder="Task Description" required></textarea>
+        <button id="addTaskBtn">Add Task</button>
+      </div>
+    </div>
+    
+    <div class="admin-section">
+      <h2>Pending Submissions</h2>
+      <div id="submissionsList"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getDatabase, ref, onValue, push, set, get, update, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD14wwgcUIyiPl_qXvx7CtQTO2DEy465II",
+    authDomain: "my-video-earn-app12.firebaseapp.com",
+    databaseURL: "https://my-video-earn-app12-default-rtdb.firebaseio.com",
+    projectId: "my-video-earn-app12",
+    storageBucket: "my-video-earn-app12.firebaseapp.com",
+    messagingSenderId: "967539655660",
+    appId: "1:967539655660:web:95e773e701d35a252936c9",
+    measurementId: "G-DPWBZT3RN5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth(app);
+  
+  let currentUser = null;
+  let isAdmin = false;
+  let userPoints = 0;
+  let completedTasks = [];
+  
+  // DOM Elements
+  const authContainer = document.getElementById("authContainer");
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const showSignupBtn = document.getElementById("showSignup");
+  const showLoginBtn = document.getElementById("showLogin");
+  const loginEmailInput = document.getElementById("loginEmail");
+  const loginPasswordInput = document.getElementById("loginPassword");
+  const loginBtn = document.getElementById("loginBtn");
+  const signupUsernameInput = document.getElementById("signupUsername");
+  const signupEmailInput = document.getElementById("signupEmail");
+  const signupPasswordInput = document.getElementById("signupPassword");
+  const signupBtn = document.getElementById("signupBtn");
+  const userInfo = document.getElementById("userInfo");
+  const usernameDisplay = document.getElementById("usernameDisplay");
+  const pointsDisplay = document.getElementById("pointsDisplay");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const adminPanel = document.getElementById("adminPanel");
+  const taskList = document.getElementById("taskList");
+  const submissionsList = document.getElementById("submissionsList");
+  const addTaskBtn = document.getElementById("addTaskBtn");
+  const tabs = document.querySelectorAll(".tab");
+  const tasksTab = document.getElementById("tasksTab");
+  const adminTab = document.getElementById("adminTab");
+  
+  // Toggle between login and signup forms
+  showSignupBtn.addEventListener("click", () => {
+    loginForm.classList.add("hidden");
+    signupForm.classList.remove("hidden");
+  });
+  
+  showLoginBtn.addEventListener("click", () => {
+    signupForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+  });
+  
+  // Tab navigation
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      
+      const tabName = tab.getAttribute("data-tab");
+      if (tabName === "tasksTab") {
+        tasksTab.classList.remove("hidden");
+        adminTab.classList.add("hidden");
+      } else {
+        adminTab.classList.remove("hidden");
+        tasksTab.classList.add("hidden");
+      }
+    });
+  });
+  
+  // Sign up
+  signupBtn.addEventListener("click", async () => {
+    const email = signupEmailInput.value;
+    const password = signupPasswordInput.value;
+    const username = signupUsernameInput.value;
+    
+    if (!email || !password || !username) {
+      alert("Please fill all fields");
+      return;
+    }
+    
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Save user data to database
+      await set(ref(db, `users/${user.uid}`), {
+        username: username,
+        email: email,
+        points: 0,
+        isAdmin: false,
+        completedTasks: {}
+      });
+      
+      signupForm.reset();
+    } catch (error) {
+      alert(`Error creating account: ${error.message}`);
+    }
+  });
+  
+  // Login
+  loginBtn.addEventListener("click", async () => {
+    const email = loginEmailInput.value;
+    const password = loginPasswordInput.value;
+    
+    if (!email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      loginForm.reset();
+    } catch (error) {
+      alert(`Login failed: ${error.message}`);
+    }
+  });
+  
+  // Logout
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth);
+  });
+  
+  // Auth state observer
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      authContainer.classList.add("hidden");
+      userInfo.classList.remove("hidden");
+      
+      // Get user data
+      const userRef = ref(db, `users/${user.uid}`);
+      const snapshot = await get(userRef);
+      const userData = snapshot.val();
+      
+      if (userData) {
+        usernameDisplay.textContent = userData.username;
+        userPoints = userData.points || 0;
+        pointsDisplay.textContent = userPoints;
+        isAdmin = userData.isAdmin || false;
+        completedTasks = userData.completedTasks ? Object.keys(userData.completedTasks) : [];
+        
+        if (isAdmin) {
+          adminPanel.classList.remove("hidden");
+          loadSubmissions();
+        }
+      }
+      
+      loadTasks();
+    } else {
+      currentUser = null;
+      authContainer.classList.remove("hidden");
+      userInfo.classList.add("hidden");
+      adminPanel.classList.add("hidden");
+      taskList.innerHTML = "";
+    }
+  });
+  
+  // Add new task (admin only)
+  addTaskBtn.addEventListener("click", async () => {
+    if (!isAdmin) return;
+    
+    const title = document.getElementById("taskTitle").value;
+    const reward = document.getElementById("taskReward").value;
+    const link = document.getElementById("taskLink").value;
+    const description = document.getElementById("taskDescription").value;
+    
+    if (!title || !reward || !link || !description) {
+      alert("Please fill all fields");
+      return;
+    }
+    
+    try {
+      const tasksRef = ref(db, "tasks");
+      push(tasksRef, {
+        title,
+        reward: Number(reward),
+        link,
+        description,
+        createdAt: Date.now()
+      });
+      
+      document.getElementById("taskTitle").value = "";
+      document.getElementById("taskReward").value = "";
+      document.getElementById("taskLink").value = "";
+      document.getElementById("taskDescription").value = "";
+      
+      alert("Task added successfully!");
+    } catch (error) {
+      alert(`Error adding task: ${error.message}`);
+    }
+  });
+  
+  // Load tasks
+  function loadTasks() {
+    const tasksRef = ref(db, "tasks");
+    onValue(tasksRef, (snapshot) => {
+      taskList.innerHTML = "";
+      
+      if (!snapshot.exists()) {
+        taskList.innerHTML = "<p>No tasks available right now.</p>";
+        return;
+      }
+      
+      snapshot.forEach(child => {
+        const task = child.val();
+        const taskId = child.key;
+        
+        // Skip completed tasks
+        if (completedTasks.includes(taskId)) {
+          return;
+        }
+        
+        const div = document.createElement("div");
+        div.className = "task";
+        
+        const taskHeader = document.createElement("div");
+        taskHeader.className = "task-header";
+        
+        const taskTitle = document.createElement("h3");
+        taskTitle.textContent = task.title;
+        
+        const taskReward = document.createElement("span");
+        taskReward.className = "reward";
+        taskReward.textContent = `${task.reward} Points`;
+        
+        taskHeader.appendChild(taskTitle);
+        taskHeader.appendChild(taskReward);
+        
+        const taskDesc = document.createElement("p");
+        taskDesc.textContent = task.description;
+        
+        const taskLink = document.createElement("a");
+        taskLink.href = task.link;
+        taskLink.target = "_blank";
+        taskLink.textContent = "Visit Task Link";
+        taskLink.style.display = "inline-block";
+        taskLink.style.margin = "10px 0";
+        taskLink.style.color = "#3498db";
+        
+        const form = document.createElement("form");
+        form.className = "submit-form";
+        form.setAttribute("data-id", taskId);
+        form.innerHTML = `
+          <input type="file" name="screenshot" required accept="image/*" />
+          <textarea name="comment" placeholder="Comment (optional)"></textarea>
+          <button type="submit">Submit Proof</button>
+        `;
+        
+        div.appendChild(taskHeader);
+        div.appendChild(taskDesc);
+        div.appendChild(taskLink);
+        div.appendChild(form);
+        
+        taskList.appendChild(div);
+        
+        // Add event listener for form submission
+        form.addEventListener("submit", submitTaskProof);
+      });
+    });
+  }
+  
+  // Submit task proof
+  async function submitTaskProof(e) {
+    e.preventDefault();
+    
+    if (!currentUser) {
+      alert("Please login first");
+      return;
+    }
+    
+    const form = e.target;
+    const taskId = form.getAttribute("data-id");
+    const comment = form.comment.value;
+    const file = form.screenshot.files[0];
+    
+    if (!file) {
+      alert("Please upload a screenshot");
+      return;
+    }
+    
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async function() {
+        const screenshot = reader.result;
+        
+        const submissionRef = ref(db, `submissions/${taskId}/${currentUser.uid}`);
+        await set(submissionRef, {
+          userId: currentUser.uid,
+          screenshot,
+          comment,
+          status: "pending",
+          timestamp: Date.now()
+        });
+        
+        alert("Proof submitted successfully! Waiting for admin approval.");
+        form.reset();
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      alert(`Error submitting proof: ${error.message}`);
+    }
+  }
+  
+  // Load submissions (admin only)
+  function loadSubmissions() {
+    const submissionsRef = ref(db, "submissions");
+    onValue(submissionsRef, async (snapshot) => {
+      submissionsList.innerHTML = "";
+      
+      if (!snapshot.exists()) {
+        submissionsList.innerHTML = "<p>No pending submissions.</p>";
+        return;
+      }
+      
+      let pendingFound = false;
+      
+      // For each task with submissions
+      snapshot.forEach(async (taskSnapshot) => {
+        const taskId = taskSnapshot.key;
+        
+        // Get task details
+        const taskRef = ref(db, `tasks/${taskId}`);
+        const taskSnapshot2 = await get(taskRef);
+        const taskData = taskSnapshot2.val();
+        
+        if (!taskData) return;
+        
+        // For each user submission for this task
+        taskSnapshot.forEach((userSubmission) => {
+          const submissionData = userSubmission.val();
+          const userId = userSubmission.key;
+          
+          // Only show pending submissions
+          if (submissionData.status === "pending") {
+            pendingFound = true;
+            
+            // Get user details
+            get(ref(db, `users/${userId}`)).then((userSnapshot) => {
+              const userData = userSnapshot.val();
+              
+              if (!userData) return;
+              
+              const div = document.createElement("div");
+              div.className = "submission";
+              
+              const header = document.createElement("h3");
+              header.textContent = `${userData.username} - ${taskData.title} (${taskData.reward} Points)`;
+              
+              const img = document.createElement("img");
+              img.src = submissionData.screenshot;
+              img.alt = "Submission Screenshot";
+              
+              const comment = document.createElement("p");
+              comment.textContent = submissionData.comment || "No comment provided";
+              
+              const timestamp = document.createElement("p");
+              timestamp.textContent = `Submitted: ${new Date(submissionData.timestamp).toLocaleString()}`;
+              
+              const buttons = document.createElement("div");
+              buttons.className = "admin-buttons";
+              
+              const approveBtn = document.createElement("button");
+              approveBtn.className = "approve-btn";
+              approveBtn.textContent = "Approve";
+              approveBtn.addEventListener("click", () => approveSubmission(taskId, userId, taskData.reward));
+              
+              const rejectBtn = document.createElement("button");
+              rejectBtn.className = "reject-btn";
+              rejectBtn.textContent = "Reject";
+              rejectBtn.addEventListener("click", () => rejectSubmission(taskId, userId));
+              
+              buttons.appendChild(approveBtn);
+              buttons.appendChild(rejectBtn);
+              
+              div.appendChild(header);
+              div.appendChild(img);
+              div.appendChild(comment);
+              div.appendChild(timestamp);
+              div.appendChild(buttons);
+              
+              submissionsList.appendChild(div);
+            });
+          }
+        });
+      });
+      
+      if (!pendingFound) {
+        submissionsList.innerHTML = "<p>No pending submissions.</p>";
+      }
+    });
+  }
+  
+  // Approve submission
+  async function approveSubmission(taskId, userId, reward) {
+    try {
+      // Update submission status
+      await update(ref(db, `submissions/${taskId}/${userId}`), {
+        status: "approved"
+      });
+      
+      // Get user's current points
+      const userRef = ref(db, `users/${userId}`);
+      const snapshot = await get(userRef);
+      const userData = snapshot.val();
+      
+      if (!userData) return;
+      
+      const currentPoints = userData.points || 0;
+      const newPoints = currentPoints + reward;
+      
+      // Update user points and add to completed tasks
+      await update(userRef, {
+        points: newPoints,
+        [`completedTasks/${taskId}`]: true
+      });
+      
+      alert("Submission approved and points awarded!");
+    } catch (error) {
+      alert(`Error approving submission: ${error.message}`);
+    }
+  }
+  
+  // Reject submission
+  async function rejectSubmission(taskId, userId) {
+    try {
+      await update(ref(db, `submissions/${taskId}/${userId}`), {
+        status: "rejected"
+      });
+      
+      alert("Submission rejected!");
+    } catch (error) {
+      alert(`Error rejecting submission: ${error.message}`);
+    }
+  }
+</script>
+</body>
+</html>
