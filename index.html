@@ -98,6 +98,17 @@
       font-size: 16px;
     }
     
+    .submit-form input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 10px;
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+    
     .submit-form button,
     .auth-form button,
     .logout-btn {
@@ -521,7 +532,8 @@
         form.className = "submit-form";
         form.setAttribute("data-id", taskId);
         form.innerHTML = `
-          <input type="file" name="screenshot" required accept="image/*" />
+          <input type="file" name="screenshot" required accept="image/png,image/jpeg,image/jpg,image/gif" capture="environment" />
+          <p style="font-size: 14px; color: #666;">Note: If file selection doesn't work, try enabling "Desktop Mode" in your browser settings.</p>
           <textarea name="comment" placeholder="Comment (optional)"></textarea>
           <button type="submit">Submit Proof</button>
         `;
@@ -535,6 +547,12 @@
         
         // Add event listener for form submission
         form.addEventListener("submit", submitTaskProof);
+        
+        // Ensure file input triggers on touch
+        const fileInput = form.querySelector('input[type="file"]');
+        fileInput.addEventListener('touchstart', () => {
+          fileInput.click(); // Trigger file picker on touch
+        });
       });
     });
   }
@@ -542,6 +560,8 @@
   // Submit task proof
   async function submitTaskProof(e) {
     e.preventDefault();
+    
+    console.log("Form submitted"); // Debug: Check if form submission is triggered
     
     if (!currentUser) {
       alert("Please login first");
@@ -551,10 +571,29 @@
     const form = e.target;
     const taskId = form.getAttribute("data-id");
     const comment = form.comment.value;
-    const file = form.screenshot.files[0];
+    const fileInput = form.screenshot;
+    const file = fileInput.files[0];
+    
+    console.log("File input:", fileInput.files); // Debug: Log selected files
     
     if (!file) {
-      alert("Please upload a screenshot");
+      alert("Please select an image file");
+      return;
+    }
+    
+    // Validate file type
+    const validImageTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+    console.log("File type:", file.type); // Debug: Log file type
+    if (!validImageTypes.includes(file.type)) {
+      alert("Please upload a valid image file (PNG, JPEG, JPG, or GIF)");
+      return;
+    }
+    
+    // Validate file size (e.g., max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    console.log("File size:", file.size); // Debug: Log file size
+    if (file.size > maxSize) {
+      alert("File size exceeds 5MB. Please upload a smaller file.");
       return;
     }
     
@@ -562,6 +601,7 @@
       const reader = new FileReader();
       reader.onloadend = async function() {
         const screenshot = reader.result;
+        console.log("File read successfully, size:", screenshot.length); // Debug: Log Data URL size
         
         const submissionRef = ref(db, `submissions/${taskId}/${currentUser.uid}`);
         await set(submissionRef, {
@@ -575,8 +615,13 @@
         alert("Proof submitted successfully! Waiting for admin approval.");
         form.reset();
       };
+      reader.onerror = () => {
+        console.error("FileReader error"); // Debug: Log FileReader errors
+        alert("Error reading the file. Please try again.");
+      };
       reader.readAsDataURL(file);
     } catch (error) {
+      console.error("Submission error:", error); // Debug: Log submission errors
       alert(`Error submitting proof: ${error.message}`);
     }
   }
